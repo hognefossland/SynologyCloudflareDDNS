@@ -12,7 +12,7 @@ ipAddr="$4"
 # Check IP address is v4
 if [[ ! $ipAddr =~ $ipv4Regex ]]
 then
-    echo "$ipAddr is not a valid IPv4 address";
+    echo "badparam";
     exit 1;
 fi
 
@@ -42,10 +42,10 @@ then
 
     if [[ $resSuccess = true ]]
     then
-        echo "Created DNS record ${hostname} with IP address $ipAddr."
+        echo "good"
         exit 0;
     else
-        echo "Failed to create DNS record ${hostname} with IP address $ipAddr."
+        echo "badauth"
         exit 1;
     fi
 fi
@@ -58,7 +58,7 @@ recordTtl=$(echo "$res" | jq -r ".result[0].ttl")
 
 if [[ $recordIp = "$ipAddr" ]]
 then
-    echo "DNS record ${hostname} already has the correct IP address $recordIp."
+    echo "nochg"
     exit 0;
 fi
 
@@ -73,9 +73,9 @@ resSuccess=$(echo "$res" | jq -r ".success")
 
 if [[ $resSuccess = true ]]
 then
-    echo "Updated DNS record ${hostname} with IP address $ipAddr (previously $recordIp)."
+    echo "good"
     exit 0;
 else
-    echo "Failed to update DNS record ${hostname} with IP address $ipAddr (currently $recordIp)."
+    echo "badauth"
     exit 1;
 fi
