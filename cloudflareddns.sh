@@ -54,7 +54,7 @@ if [[ $ipv6 = "true" ]]; then
 recordIdv6=$(echo "$resv6" | jq -r ".result[0].id");
 recordIpv6=$(echo "$resv6" | jq -r ".result[0].content");
 recordProxv6=$(echo "$resv6" | jq -r ".result[0].proxied");
-recordTtl6=$(echo "$res" | jq -r ".result[0].ttl");
+recordTtlv6=$(echo "$res" | jq -r ".result[0].ttl");
 fi
 
 # API-Calls for creating DNS-Entries
@@ -85,7 +85,7 @@ if [[ $ipv6 = "true" ]] ; then
     res6=$(curl -s -X POST "$createDnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recType6\",\"name\":\"$hostname\",\"content\":\"$ip6Addr\",\"proxied\":$proxy}");
 	else
     # IPv6 Record exists
-    res6=$(curl -s -X PUT "$update6DnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recType6\",\"name\":\"$hostname\",\"content\":\"$ip6Addr\",\"proxied\":$recordProxv6,\"ttl\":$recordTtl6}");
+    res6=$(curl -s -X PUT "$update6DnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recType6\",\"name\":\"$hostname\",\"content\":\"$ip6Addr\",\"proxied\":$recordProxv6,\"ttl\":$recordTtlv6}");
 	fi;
 	res6Success=$(echo "$res6" | jq -r ".success");
 fi
