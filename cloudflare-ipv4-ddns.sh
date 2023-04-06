@@ -6,8 +6,11 @@ ipv4Regex="((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0
 # DSM Config
 username="$1"
 password="$2"
-hostname="$3"
+hostname="${3/WILDCARD/*}"
 ipAddr="$4"
+
+echo $hostname
+exit 0;
 
 # Check IP address is v4
 if [[ ! $ipAddr =~ $ipv4Regex ]]
