@@ -49,10 +49,12 @@ fi
 recordId=$(echo "$res" | jq -r ".result[0].id")
 recordIp=$(echo "$res" | jq -r ".result[0].content")
 recordProx=$(echo "$res" | jq -r ".result[0].proxied")
+recordTtl=$(echo "$res" | jq -r ".result[0].ttl")
 if [[ $ipv6 = "true" ]]; then
 recordIdv6=$(echo "$resv6" | jq -r ".result[0].id");
 recordIpv6=$(echo "$resv6" | jq -r ".result[0].content");
 recordProxv6=$(echo "$resv6" | jq -r ".result[0].proxied");
+recordTtl6=$(echo "$res" | jq -r ".result[0].ttl");
 fi
 
 # API-Calls for creating DNS-Entries
@@ -74,7 +76,7 @@ if [[ $recordId = "null" ]]; then
     res=$(curl -s -X POST "$createDnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recordType\",\"name\":\"$hostname\",\"content\":\"$ipAddr\",\"proxied\":$proxy}")
 else
     # Record exists
-    res=$(curl -s -X PUT "$updateDnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recordType\",\"name\":\"$hostname\",\"content\":\"$ipAddr\",\"proxied\":$recordProx}")
+    res=$(curl -s -X PUT "$updateDnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recordType\",\"name\":\"$hostname\",\"content\":\"$ipAddr\",\"proxied\":$recordProx,\"ttl\":$recordTtl}")
 fi
 if [[ $ipv6 = "true" ]] ; then
 	if [[ $recordIdv6 = "null" ]]; then
@@ -83,7 +85,7 @@ if [[ $ipv6 = "true" ]] ; then
     res6=$(curl -s -X POST "$createDnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recType6\",\"name\":\"$hostname\",\"content\":\"$ip6Addr\",\"proxied\":$proxy}");
 	else
     # IPv6 Record exists
-    res6=$(curl -s -X PUT "$update6DnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recType6\",\"name\":\"$hostname\",\"content\":\"$ip6Addr\",\"proxied\":$recordProxv6}");
+    res6=$(curl -s -X PUT "$update6DnsApi" -H "Authorization: Bearer $password" -H "Content-Type:application/json" --data "{\"type\":\"$recType6\",\"name\":\"$hostname\",\"content\":\"$ip6Addr\",\"proxied\":$recordProxv6,\"ttl\":$recordTtl6}");
 	fi;
 	res6Success=$(echo "$res6" | jq -r ".success");
 fi
